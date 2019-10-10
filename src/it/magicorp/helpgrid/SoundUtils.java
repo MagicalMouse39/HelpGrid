@@ -2,7 +2,6 @@ package it.magicorp.helpgrid;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.FileInputStream;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
@@ -10,8 +9,6 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.swing.Timer;
-
-import javazoom.jl.player.Player;
 
 public class SoundUtils
 {
@@ -22,9 +19,6 @@ public class SoundUtils
 		try
 		{
 			Runtime.getRuntime().exec("mpg321 /home/pi/Desktop/HelpGrid/" + (file == 0 ? "beep1.mp3" : "beep2.mp3"));
-			/*FileInputStream is = new FileInputStream(file == 0 ? "beep1.mp3" : "beep2.mp3");
-			Player p = new Player(is);
-			p.play();*/
 		}
 		catch (Exception ex)
 		{
