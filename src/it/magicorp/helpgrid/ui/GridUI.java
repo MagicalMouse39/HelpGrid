@@ -13,11 +13,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
@@ -40,9 +40,17 @@ public class GridUI extends JFrame implements KeyListener
 	protected ArrayList<JButton> buttons = new ArrayList<JButton>();
 	private ArrayList<SimpleEntry<JButton, SimpleEntry<Integer, Integer>>> grid = new ArrayList<SimpleEntry<JButton, SimpleEntry<Integer, Integer>>>();
 	protected JPanel bgPane;
-	protected JPanel hoverOver;
+	protected JPanel hoverTop;
+	protected JPanel hoverLeft;
+	protected JPanel hoverRight;
+	protected JPanel hoverBottom;
 	protected JPanel hoverPane;
 	protected JTextArea messageArea;
+	
+	private enum Language
+	{
+		ENGLISH, ITALIAN
+	}
 	
 	public static GridUI instance = new GridUI();
 	
@@ -59,15 +67,21 @@ public class GridUI extends JFrame implements KeyListener
 			if (b.getText().contains("Dark Mode"))
 				b.setText("Dark Mode " + (GridUI.this.isDarkMode ? "[ON]" : "[OFF]"));
 		}
+		
+		this.messageArea.setBackground(this.isDarkMode ? new Color(33, 33, 40) : new Color(200, 200, 200));
 	}
 	
 	private int bw = 100;
 	
 	private int col = 0, row = 0, maxRow = 0;
 	
+	private Language lang = Language.ITALIAN;
+	
+	private HashMap<String, String> names = new HashMap<String, String>();
+	
 	private void addButtons()
 	{
-		JButton helpBtn = new JButton("Help");
+		JButton helpBtn = new JButton(this.lang == Language.ENGLISH ? "Help" : "Aiuto");
 		helpBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -81,14 +95,15 @@ public class GridUI extends JFrame implements KeyListener
 						if (SoundUtils.isPlaying)
 							return;
 						SoundUtils.play(0);
-						messageArea.setText("Help");
+						messageArea.setText(GridUI.this.lang == Language.ENGLISH ? "Help" : "Aiuto");
 					}
 				}).start();
 			}
 		});
 		this.buttons.add(helpBtn);
+		this.names.put("Help", "Aiuto");
 	
-		JButton darkModeBtn = new JButton("Dark Mode " + (this.isDarkMode ? "[ON]" : "[OFF]")/*, new ImageIcon("darkMode.png")*/);
+		JButton darkModeBtn = new JButton("Dark Mode " + (this.isDarkMode ? "[ON]" : "[OFF]"));
 		
 		darkModeBtn.addActionListener(new ActionListener()
 		{
@@ -101,6 +116,98 @@ public class GridUI extends JFrame implements KeyListener
 		});
 		this.buttons.add(darkModeBtn);
 		
+		JButton yesBtn = new JButton(this.lang == Language.ENGLISH ? "Yes" : "Si");
+		yesBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				GridUI.this.messageArea.setText(GridUI.this.lang == Language.ENGLISH ? "Yes" : "Si");
+			}
+		});
+		this.buttons.add(yesBtn);
+		this.names.put("Yes", "Si");
+		
+		JButton noBtn = new JButton("No");
+		noBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				GridUI.this.messageArea.setText("No");
+			}
+		});
+		this.buttons.add(noBtn);
+		
+		JButton bathroomBtn = new JButton(this.lang == Language.ENGLISH ? "Bathroom" : "Bagno");
+		bathroomBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				SoundUtils.play(0);
+				GridUI.this.messageArea.setText(GridUI.this.lang == Language.ENGLISH ? "Bathroom" : "Bagno");
+			}
+		});
+		this.buttons.add(bathroomBtn);
+		this.names.put("Bathroom", "Bagno");
+		
+		JButton foodBtn = new JButton(this.lang == Language.ENGLISH ? "Food" : "Cibo");
+		foodBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				SoundUtils.play(1);
+				GridUI.this.messageArea.setText(GridUI.this.lang == Language.ENGLISH ? "I'm hungry" : "Ho fame");
+			}
+		});
+		this.buttons.add(foodBtn);
+		this.names.put("Food", "Cibo");
+		
+		JButton drinkBtn = new JButton(this.lang == Language.ENGLISH ? "Drink" : "Acqua");
+		drinkBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				SoundUtils.play(1);
+				GridUI.this.messageArea.setText(GridUI.this.lang == Language.ENGLISH ? "I'm thirsty" : "Ho sete");
+			}
+		});
+		this.buttons.add(drinkBtn);
+		this.names.put("Drink", "Acqua");
+		
+		JButton langBtn = new JButton(this.lang == Language.ENGLISH ? "Cambia a ITA" : "Change to ENG");
+		langBtn.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				for (JButton b : GridUI.this.buttons)
+				{
+					if (GridUI.this.lang == Language.ENGLISH)
+						for (String n : GridUI.this.names.keySet())
+						{
+							if (b.getText().equals(n))
+								b.setText(GridUI.this.names.get(n));
+						}
+					else if (GridUI.this.lang == Language.ITALIAN)
+						for (String n : GridUI.this.names.values())
+							if (b.getText().equals(n))
+								for (String k : GridUI.this.names.keySet())
+									if (GridUI.this.names.get(k).equals(n))
+										b.setText(k);
+				}
+				GridUI.this.lang = GridUI.this.lang == Language.ENGLISH ? Language.ITALIAN : Language.ENGLISH;
+			}
+		});
+		this.buttons.add(langBtn);
+		this.names.put("Cambia a ITA", "Change to ENG");
+		
+		/*
+		 * Buttons property setter
+		 */
 		for (int i = 0; i < this.buttons.size(); i++)
 		{
 			if (bw * row + 10 * row > this.getWidth() - bw - 10)
@@ -131,7 +238,6 @@ public class GridUI extends JFrame implements KeyListener
 		this.bgPane = new JPanel();
 		
 		this.messageArea = new JTextArea();
-		this.messageArea.setBounds(this.getWidth() - 300, this.getHeight() - 40, 300, 40);
 		
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	    this.setMaximizedBounds(env.getMaximumWindowBounds());
@@ -140,6 +246,7 @@ public class GridUI extends JFrame implements KeyListener
 		this.setDefaultCloseOperation(GridUI.EXIT_ON_CLOSE);
 		this.setBounds(0, 0, screen.width, screen.height);
 		this.setFocusable(true);
+		this.setUndecorated(true);
 		this.addKeyListener(this);
 		
 		this.bgPane.setBackground(this.isDarkMode ? new Color(33, 33, 40) : new Color(200, 200, 200));
@@ -148,10 +255,22 @@ public class GridUI extends JFrame implements KeyListener
 		this.hoverPane = new JPanel();
 		this.hoverPane.setBounds(10, 10, this.bw, this.bw);
 		this.hoverPane.setOpaque(false);
-		
-		this.hoverOver = new JPanel();
-		this.hoverOver.setBounds(10, 5, this.bw, 5);
-		this.hoverOver.setBackground(Color.RED);
+
+		this.hoverTop = new JPanel();
+		this.hoverTop.setBounds(10, 5, this.bw, 5);
+		this.hoverTop.setBackground(Color.RED);
+
+		this.hoverBottom = new JPanel();
+		this.hoverBottom.setBounds(5, 5, 5, this.bw + 5);
+		this.hoverBottom.setBackground(Color.RED);
+
+		this.hoverLeft = new JPanel();
+		this.hoverLeft.setBounds(5, this.bw + 10, this.bw + 10, 5);
+		this.hoverLeft.setBackground(Color.RED);
+
+		this.hoverRight = new JPanel();
+		this.hoverRight.setBounds(this.bw + 10, 5, 5, this.bw + 5);
+		this.hoverRight.setBackground(Color.RED);
 		
 		new Thread(new Runnable()
 		{
@@ -159,21 +278,34 @@ public class GridUI extends JFrame implements KeyListener
 			public void run()
 			{
 				while (true)
-					GridUI.this.hoverOver.setBounds(GridUI.this.hoverPane.getX(), GridUI.this.hoverPane.getY() - 5, GridUI.this.bw, 5);
+				{
+					GridUI.this.hoverTop.setBounds(GridUI.this.hoverPane.getX(), GridUI.this.hoverPane.getY() - 5, GridUI.this.bw, 5);
+					GridUI.this.hoverLeft.setBounds(GridUI.this.hoverPane.getX() - 5, GridUI.this.hoverPane.getY() - 5, 5, GridUI.this.bw + 10);
+					GridUI.this.hoverRight.setBounds(GridUI.this.hoverPane.getX() + GridUI.this.bw, GridUI.this.hoverPane.getY() - 5, 5, GridUI.this.bw + 10);
+					GridUI.this.hoverBottom.setBounds(GridUI.this.hoverPane.getX(), GridUI.this.hoverPane.getY() + GridUI.this.bw, GridUI.this.bw, 5);
+				}
 			}
 		}).start();
 		
-		this.setContentPane(this.bgPane);
-		
 		this.addButtons();
+		
+		this.messageArea.setBounds(this.getWidth() - 310, this.getHeight() - 70, 300, 40);
+		this.messageArea.setBackground(this.isDarkMode ? new Color(33, 33, 40) : new Color(200, 200, 200));
+		this.messageArea.setForeground(new Color(255, 87, 33));
+		this.messageArea.setFont(this.messageArea.getFont().deriveFont(32f));
 
 		this.bgPane.add(this.hoverPane);
-		this.bgPane.add(this.hoverOver);
+		this.bgPane.add(this.hoverTop);
+		this.bgPane.add(this.hoverLeft);
+		this.bgPane.add(this.hoverRight);
+		this.bgPane.add(this.hoverBottom);
 		
 		for (JButton b : this.buttons)
 			this.bgPane.add(b);
 		
 		this.bgPane.add(this.messageArea);
+		
+		this.setContentPane(this.bgPane);
 	}
 	
 	public void showUI()
