@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import it.magicorp.helpgrid.SoundUtils;
 
@@ -41,6 +42,7 @@ public class GridUI extends JFrame implements KeyListener
 	protected JPanel bgPane;
 	protected JPanel hoverOver;
 	protected JPanel hoverPane;
+	protected JTextArea messageArea;
 	
 	public static GridUI instance = new GridUI();
 	
@@ -63,8 +65,6 @@ public class GridUI extends JFrame implements KeyListener
 	
 	private int col = 0, row = 0, maxRow = 0;
 	
-	protected JLabel request = new JLabel();
-	
 	private void addButtons()
 	{
 		JButton helpBtn = new JButton("Help");
@@ -81,11 +81,7 @@ public class GridUI extends JFrame implements KeyListener
 						if (SoundUtils.isPlaying)
 							return;
 						SoundUtils.play(0);
-						request = new JLabel();
-						request.setText("Help");
-						request.setForeground(Color.RED);
-						request.setBounds(0, 0, GridUI.this.getWidth(), GridUI.this.getHeight());
-						GridUI.this.add(request);
+						messageArea.setText("Help");
 					}
 				}).start();
 			}
@@ -134,6 +130,9 @@ public class GridUI extends JFrame implements KeyListener
 	{
 		this.bgPane = new JPanel();
 		
+		this.messageArea = new JTextArea();
+		this.messageArea.setBounds(this.getWidth() - 300, this.getHeight() - 40, 300, 40);
+		
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	    this.setMaximizedBounds(env.getMaximumWindowBounds());
 	    this.setExtendedState(this.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -173,6 +172,8 @@ public class GridUI extends JFrame implements KeyListener
 		
 		for (JButton b : this.buttons)
 			this.bgPane.add(b);
+		
+		this.bgPane.add(this.messageArea);
 	}
 	
 	public void showUI()
