@@ -42,6 +42,8 @@ public class GridUI extends JFrame implements KeyListener
 	protected JPanel hoverOver;
 	protected JPanel hoverPane;
 	
+	public static GridUI instance = new GridUI();
+	
 	public boolean isDarkMode = true;
 	
 	private void setProperties()
@@ -128,7 +130,7 @@ public class GridUI extends JFrame implements KeyListener
 		
 	}
 	
-	public GridUI()
+	private GridUI()
 	{
 		this.bgPane = new JPanel();
 		
