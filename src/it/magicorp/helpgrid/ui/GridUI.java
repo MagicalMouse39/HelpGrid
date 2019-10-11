@@ -355,7 +355,7 @@ public class GridUI extends JFrame implements KeyListener
 		
 		this.addButtons();
 		
-		this.messageArea.setBounds(0, this.getHeight() / 2 + 50, this.getWidth(), this.getHeight() / 2 - 200);
+		this.messageArea.setBounds(0, this.getHeight() / 2 + 150, this.getWidth(), this.getHeight() / 2 - 200);
 		this.messageArea.setBackground(this.isDarkMode ? new Color(33, 33, 40) : new Color(200, 200, 200));
 		this.messageArea.setForeground(new Color(255, 87, 33));
 		this.messageArea.setFont(this.messageArea.getFont().deriveFont(128f));
