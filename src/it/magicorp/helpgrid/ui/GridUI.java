@@ -75,7 +75,7 @@ public class GridUI extends JFrame implements KeyListener
 		this.messageArea.setBackground(this.isDarkMode ? new Color(33, 33, 40) : new Color(200, 200, 200));
 	}
 	
-	private int bw = 200;
+	private int bw = 300;
 	
 	private int col = 0, row = 0, maxRow = 0;
 	
