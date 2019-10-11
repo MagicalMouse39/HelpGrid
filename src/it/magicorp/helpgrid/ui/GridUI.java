@@ -20,7 +20,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import it.magicorp.helpgrid.SoundUtils;
 
@@ -46,7 +49,7 @@ public class GridUI extends JFrame implements KeyListener
 	protected JPanel hoverRight;
 	protected JPanel hoverBottom;
 	protected JPanel hoverPane;
-	protected JTextArea messageArea;
+	protected JTextPane messageArea;
 	
 	private enum Language
 	{
@@ -192,7 +195,7 @@ public class GridUI extends JFrame implements KeyListener
 		this.buttons.add(tooHot);
 		this.names.put("Too Hot", "Troppo Caldo");
 		
-		JButton tooCold = new JButton(this.lang == Language.ENGLISH ? "Too Cold" : "Troppo Freddo");
+		JButton tooCold = new JButton(this.lang == Language.ENGLISH ? "Too Cold" : "Troppo Freddo", new ImageIcon("Icons/toocold.png"));
 		tooCold.addActionListener(new ActionListener()
 		{
 			@Override
@@ -205,7 +208,7 @@ public class GridUI extends JFrame implements KeyListener
 		this.buttons.add(tooCold);
 		this.names.put("Too Cold", "Troppo Freddo");
 		
-		JButton lightOn = new JButton(this.lang == Language.ENGLISH ? "Light ON" : "Accendi Luce");
+		JButton lightOn = new JButton(this.lang == Language.ENGLISH ? "Light ON" : "Accendi Luce", new ImageIcon("Icons/lighton.png"));
 		lightOn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -218,7 +221,7 @@ public class GridUI extends JFrame implements KeyListener
 		this.buttons.add(lightOn);
 		this.names.put("Light ON", "Accendi Luce");
 		
-		JButton lightOff = new JButton(this.lang == Language.ENGLISH ? "Light ON" : "Accendi Luce");
+		JButton lightOff = new JButton(this.lang == Language.ENGLISH ? "Light OFF" : "Spegni Luce", new ImageIcon("Icons/lightoff.png"));
 		lightOff.addActionListener(new ActionListener()
 		{
 			@Override
@@ -231,7 +234,7 @@ public class GridUI extends JFrame implements KeyListener
 		this.buttons.add(lightOff);
 		this.names.put("Light OFF", "Spegni Luce");
 		
-		/*JButton langBtn = new JButton(this.lang == Language.ENGLISH ? "Cambia a ITA" : "Change to ENG");
+		JButton langBtn = new JButton(this.lang == Language.ENGLISH ? "Cambia a ITA" : "Change to ENG", new ImageIcon("Icons/englishflag.png"));
 		langBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -240,23 +243,28 @@ public class GridUI extends JFrame implements KeyListener
 				for (JButton b : GridUI.this.buttons)
 				{
 					if (GridUI.this.lang == Language.ENGLISH)
-						for (String n : GridUI.this.names.keySet())
-						{
+					{
+						for (String n : GridUI.this.names.keySet())	
 							if (b.getText().equals(n))
 								b.setText(GridUI.this.names.get(n));
-						}
+						langBtn.setIcon(new ImageIcon("Icons/englishflag.png"));
+					}
 					else if (GridUI.this.lang == Language.ITALIAN)
+					{
 						for (String n : GridUI.this.names.values())
 							if (b.getText().equals(n))
 								for (String k : GridUI.this.names.keySet())
 									if (GridUI.this.names.get(k).equals(n))
 										b.setText(k);
+						langBtn.setIcon(new ImageIcon("Icons/italianflag.png"));
+					}
 				}
 				GridUI.this.lang = GridUI.this.lang == Language.ENGLISH ? Language.ITALIAN : Language.ENGLISH;
+				GridUI.this.messageArea.setText("");
 			}
 		});
 		this.buttons.add(langBtn);
-		this.names.put("Cambia a ITA", "Change to ENG");*/
+		this.names.put("Cambia a ITA", "Change to ENG");
 		
 		/*
 		 * Buttons property setter
@@ -290,7 +298,12 @@ public class GridUI extends JFrame implements KeyListener
 	{
 		this.bgPane = new JPanel();
 		
-		this.messageArea = new JTextArea();
+		this.messageArea = new JTextPane();
+		StyledDocument doc = this.messageArea.getStyledDocument();
+		SimpleAttributeSet center = new SimpleAttributeSet();
+		StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+		doc.setParagraphAttributes(0, doc.getLength(), center, false);
+		this.messageArea.setDocument(doc);
 		
 		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
 	    this.setMaximizedBounds(env.getMaximumWindowBounds());
@@ -342,10 +355,10 @@ public class GridUI extends JFrame implements KeyListener
 		
 		this.addButtons();
 		
-		this.messageArea.setBounds(this.getWidth() - 310, this.getHeight() - 70, 300, 40);
+		this.messageArea.setBounds(0, this.getHeight() / 2 + 50, this.getWidth(), this.getHeight() / 2 - 200);
 		this.messageArea.setBackground(this.isDarkMode ? new Color(33, 33, 40) : new Color(200, 200, 200));
 		this.messageArea.setForeground(new Color(255, 87, 33));
-		this.messageArea.setFont(this.messageArea.getFont().deriveFont(32f));
+		this.messageArea.setFont(this.messageArea.getFont().deriveFont(128f));
 
 		this.bgPane.add(this.hoverPane);
 		this.bgPane.add(this.hoverTop);
