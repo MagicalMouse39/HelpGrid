@@ -234,7 +234,7 @@ public class GridUI extends JFrame implements KeyListener
 		this.buttons.add(lightOff);
 		this.names.put("Light OFF", "Spegni Luce");
 		
-		JButton langBtn = new JButton(this.lang == Language.ENGLISH ? "Cambia a ITA" : "Change to ENG", new ImageIcon("Icons/englishflag.png"));
+		JButton langBtn = new JButton(this.lang == Language.ENGLISH ? "Cambia a ITA" : "Change to ENG", new ImageIcon("Icons/italianflag.png"));
 		langBtn.addActionListener(new ActionListener()
 		{
 			@Override
@@ -247,7 +247,7 @@ public class GridUI extends JFrame implements KeyListener
 						for (String n : GridUI.this.names.keySet())	
 							if (b.getText().equals(n))
 								b.setText(GridUI.this.names.get(n));
-						langBtn.setIcon(new ImageIcon("Icons/englishflag.png"));
+						langBtn.setIcon(new ImageIcon("Icons/italianflag.png"));
 					}
 					else if (GridUI.this.lang == Language.ITALIAN)
 					{
@@ -256,7 +256,7 @@ public class GridUI extends JFrame implements KeyListener
 								for (String k : GridUI.this.names.keySet())
 									if (GridUI.this.names.get(k).equals(n))
 										b.setText(k);
-						langBtn.setIcon(new ImageIcon("Icons/italianflag.png"));
+						langBtn.setIcon(new ImageIcon("Icons/englishflag.png"));
 					}
 				}
 				GridUI.this.lang = GridUI.this.lang == Language.ENGLISH ? Language.ITALIAN : Language.ENGLISH;
